@@ -22,9 +22,13 @@ class ChatBot(MessageParser, MessageSender):
                     quickReplies = quickReplies[0]
                     print(quickReplies)
                     if len(quickReplies) == 2:
+                        if text == "Vreti sa mai vedeti si alte modele de masini sau sa aflati detalile paginii?":
+                            self.sendMapDealership(self.psid)
                         self.send2QuickReplies(self.psid, text, quickReplies)
                     elif len(quickReplies) == 3:
                         self.send3QuickReplies(self.psid, text, quickReplies)
+                    elif len(quickReplies) == 8:
+                        self.send8QuickReplies(self.psid, text, quickReplies)
                 elif len(responseMessage) == 2:
                     # check if the dict contains "images" tag/key
                     # a dump implementation due to irreversibility of the python dictionary!
@@ -49,6 +53,31 @@ class ChatBot(MessageParser, MessageSender):
                                 self.send2QuickReplies(self.psid, text, quickReplies)
                             elif len(quickReplies) == 3:
                                 self.send3QuickReplies(self.psid, text, quickReplies)
+                            elif len(quickReplies) == 8:
+                                self.send8QuickReplies(self.psid, text, quickReplies)
+                elif len(responseMessage) == 5:
+                    # this is for the carousel type of data
+                    try:
+                        title = responseMessage["title"]
+                        image_url = responseMessage["image_url"]
+                        subtitle = responseMessage["subtitle"]
+                        website_url = responseMessage["website_url"]
+                        next_question = responseMessage["next_question"]
+                        for key, value in next_question.items():
+                            text = key
+                            quickReplies = value
+
+                        print("image url")
+                        print(image_url)
+                        print("website_url")
+                        print(website_url)
+                        self.sendCarousel(self.psid, title, image_url, subtitle, website_url)
+                        #self.sendTextWithEmoticon(self.psid, "")
+                        self.send3QuickReplies(self.psid, text, quickReplies)
+                    except Exception:
+                        self.sendText(self.psid, "Ne pare rau, dar se pare ca imaginile nu pot fi afisate, va rugam sa "
+                                                 "reveniti mai tarziu. Multumim!")
+
             elif type(responseMessage) is int:
                 # this is only for other data types -> skipped for the moment
                 pass

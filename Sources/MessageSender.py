@@ -35,6 +35,36 @@ class MessageSender:
         messageResponse = requests.post(self.facebookGraphURL, headers=contentType, params=pageAccessToken, data=json.dumps(data))
         print(messageResponse.content)
 
+        if message == "Ok, in cazul in care va razganditi puteti cere informatii oricand prin accesarea intrebariilor predefinite accesand butonul 'Modele masini'. Va multumim!":
+            self.sendGif(psid)
+
+    def sendEmoticon(self, psid, message, messaging_type="RESPONSE"):
+        """ sendText
+        Description:
+            Sends a specific text back to user
+
+        Parameters:
+            psid: The ID of the sender/user
+            message: The message sent to user
+            messaging_type: message type (default: "RESPONSE")
+
+        Returns:
+            None.
+
+        """
+        contentType = {'Content-Type': 'application/json'}
+
+        data = {
+            'messaging_type': messaging_type,
+            'recipient': {'id': psid},
+            'message': {'text': "😁"}
+        }
+
+        pageAccessToken = {'access_token': self.accessToken}
+        messageResponse = requests.post(self.facebookGraphURL, headers=contentType, params=pageAccessToken, data=json.dumps(data))
+        print(messageResponse.content)
+
+
     def sendImage(self, psid, image):
         data = {
             'recipient': json.dumps({
@@ -59,6 +89,28 @@ class MessageSender:
         pageAccessToken = {'access_token': self.accessToken}
         messageResponse = requests.post(self.facebookGraphURL, headers=multipart_header, params=pageAccessToken,
                                         data=multipart_data)
+        print(messageResponse.content)
+
+    def sendGif(self, psid):
+        data = {
+            'recipient': {
+                'id': psid
+            },
+            'message': {
+                'attachment': {
+                    'type': 'image',
+                    'payload': {
+                        "url": "https://j.gifs.com/98OvjJ.gif"
+                    }
+                }
+            },
+        }
+
+        contentType = {'Content-Type': 'application/json'}
+
+        pageAccessToken = {'access_token': self.accessToken}
+        messageResponse = requests.post(self.facebookGraphURL, headers=contentType, params=pageAccessToken,
+                                        data=json.dumps(data))
         print(messageResponse.content)
 
     def sendButton(self, psid, message):
@@ -117,10 +169,8 @@ class MessageSender:
         pageAccessToken = {'access_token': self.accessToken}
         messageResponse = requests.post(self.facebookGraphURL, headers=contentType, params=pageAccessToken, data=json.dumps(data))
         print(messageResponse.content)
-        #self.sendCarousel(psid, "te432xt", "quickReplies")
 
     def send3QuickReplies(self, psid, text, message):
-        self.sendPersistentMenu(psid)
         data = {
             "recipient": {
                 "id": psid
@@ -152,7 +202,66 @@ class MessageSender:
         messageResponse = requests.post(self.facebookGraphURL, headers=contentType, params=pageAccessToken, data=json.dumps(data))
         print(messageResponse.content)
 
-    def sendCarousel(self, psid, text, message):
+    def send8QuickReplies(self, psid, text, message):
+        data = {
+            "recipient": {
+                "id": psid
+            },
+            "messaging_type": "RESPONSE",
+            "message": {
+                "text": text,
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": message[0],
+                        "payload": message[0],
+                    },
+                    {
+                        "content_type": "text",
+                        "title": message[1],
+                        "payload": message[1],
+                    },
+                    {
+                        "content_type": "text",
+                        "title": message[2],
+                        "payload": message[2],
+                    },
+                    {
+                        "content_type": "text",
+                        "title": message[3],
+                        "payload": message[3],
+                    },
+                    {
+                        "content_type": "text",
+                        "title": message[4],
+                        "payload": message[4],
+                    },
+                    {
+                        "content_type": "text",
+                        "title": message[5],
+                        "payload": message[5],
+                    },
+                    {
+                        "content_type": "text",
+                        "title": message[6],
+                        "payload": message[6],
+                    },
+                    {
+                        "content_type": "text",
+                        "title": message[7],
+                        "payload": message[7],
+                    }
+                ]
+            }
+        }
+
+        contentType = {'Content-Type': 'application/json'}
+
+        pageAccessToken = {'access_token': self.accessToken}
+        messageResponse = requests.post(self.facebookGraphURL, headers=contentType, params=pageAccessToken, data=json.dumps(data))
+        print(messageResponse.content)
+
+    def sendCarousel(self, psid, title, image_url, subtitle, website_url):
         data = {
             "recipient": {
                 "id": psid
@@ -164,36 +273,53 @@ class MessageSender:
                         "template_type": "generic",
                         "elements": [
                             {
-                                "title": "Audi A6",
-                                "image_url": "https://cdn.pixabay.com/photo/2016/12/07/21/50/audi-1890494_1280.jpg",
-                                "subtitle": "Cel mai nou model de la Audi A6",
+                                "title": title[0],
+                                "image_url": image_url[0],
+                                "subtitle": subtitle[0],
                                 "default_action": {
                                     "type": "web_url",
-                                    "url": "https://autoblog.md/foto-premiera-noul-sedan-plug-in-hybrid-audi-a6-55-tfsi-e-quattro/",
+                                    "url": image_url[0],
                                     "webview_height_ratio": "tall",
                                 },
                                 "buttons": [
                                     {
                                         "type": "web_url",
-                                        "url": "https://autoblog.md/foto-premiera-noul-sedan-plug-in-hybrid-audi-a6-55-tfsi-e-quattro/",
-                                        "title": "View Website"
+                                        "url": website_url,
+                                        "title": "Acceseaza website"
                                     }
                                 ]
                             },
                             {
-                                "title": "Audi A6",
-                                "image_url": "https://cdn.pixabay.com/photo/2016/12/07/21/50/audi-1890494_1280.jpg",
-                                "subtitle": "Cel mai nou model de la Audi A6",
+                                "title": title[1],
+                                "image_url": image_url[1],
+                                "subtitle": subtitle[1],
                                 "default_action": {
                                     "type": "web_url",
-                                    "url": "https://autoblog.md/foto-premiera-noul-sedan-plug-in-hybrid-audi-a6-55-tfsi-e-quattro/",
+                                    "url": image_url[1],
                                     "webview_height_ratio": "tall",
                                 },
                                 "buttons": [
                                     {
                                         "type": "web_url",
-                                        "url": "https://autoblog.md/foto-premiera-noul-sedan-plug-in-hybrid-audi-a6-55-tfsi-e-quattro/",
-                                        "title": "View Website"
+                                        "url": website_url,
+                                        "title": "Acceseaza website"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": title[2],
+                                "image_url": image_url[2],
+                                "subtitle": subtitle[2],
+                                "default_action": {
+                                    "type": "web_url",
+                                    "url": image_url[2],
+                                    "webview_height_ratio": "tall",
+                                },
+                                "buttons": [
+                                    {
+                                        "type": "web_url",
+                                        "url": website_url,
+                                        "title": "Acceseaza website"
                                     }
                                 ]
                             }
@@ -281,6 +407,107 @@ class MessageSender:
                     ]
                 }
             ]
+        }
+
+        contentType = {'Content-Type': 'application/json'}
+
+        pageAccessToken = {'access_token': self.accessToken}
+        messageResponse = requests.post(self.facebookGraphURL, headers=contentType, params=pageAccessToken, data=json.dumps(data))
+        print(messageResponse.content)
+
+    def sendList(self, psid):
+        """
+        This method doesn't work because fb API throws exception:
+        "error":{"message":"(#100) List template on Messenger Platform is deprecated on API 4.0. It will be removed from all versions soon."
+        :param psid:
+        :return:
+        """
+        contentType = {'Content-Type': 'application/json'}
+
+        data = {
+            'recipient': {'id': psid},
+              "message": {
+                    "attachment": {
+                      "type": "template",
+                      "payload": {
+                        "template_type": "list",
+                        "top_element_style": "compact",
+                        "elements": [
+                            {
+                                "title": "Classic T-Shirt Collection",
+                                "subtitle": "See all our colors",
+                                "buttons": [
+                                    {
+                                        "title": "View",
+                                        "type": "web_url",
+                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=100",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "tall",
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Classic T-Shirt Collection",
+                                "subtitle": "See all our colors",
+                                "buttons": [
+                                    {
+                                        "title": "View",
+                                        "type": "web_url",
+                                        "url": "https://peterssendreceiveapp.ngrok.io/view?item=100",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "tall",
+                                    }
+                                ]
+                            }
+                        ],
+                         "buttons": [
+                          {
+                            "title": "View More",
+                            "type": "postback",
+                            "payload": "payload"
+                          }
+                        ]
+                      }
+                    }
+            }
+        }
+
+        pageAccessToken = {'access_token': self.accessToken}
+        messageResponse = requests.post(self.facebookGraphURL, headers=contentType, params=pageAccessToken, data=json.dumps(data))
+        print(messageResponse.content)
+        self.sendGif(psid)
+
+
+    def sendMapDealership(self, psid):
+        data = {
+            'recipient': {'id': psid},
+            "message": {
+                "attachment": {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "generic",
+                        "elements": [
+                            {
+                                "title": "Audi Timisoara",
+                                "image_url": "https://im7.ezgif.com/tmp/ezgif-7-5c72304fdc6a.png",
+                                "subtitle": "Reprezentata Audi Timisoara",
+                                "default_action": {
+                                    "type": "web_url",
+                                    "url": "https://www.google.com/maps/place/Porsche+Timisoara+-+dealer+Audi+si+Skoda/@45.7761406,21.3111878,15z/data=!4m5!3m4!1s0x474560d63a50b5e9:0x51309b7524374593!8m2!3d45.7766074!4d21.3141784",
+                                    "webview_height_ratio": "tall",
+                                },
+                                "buttons": [
+                                    {
+                                        "type": "web_url",
+                                        "url": "https://www.google.com/maps/place/Porsche+Timisoara+-+dealer+Audi+si+Skoda/@45.7761406,21.3111878,15z/data=!4m5!3m4!1s0x474560d63a50b5e9:0x51309b7524374593!8m2!3d45.7766074!4d21.3141784",
+                                        "title": "Vezi harta"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
         }
 
         contentType = {'Content-Type': 'application/json'}
